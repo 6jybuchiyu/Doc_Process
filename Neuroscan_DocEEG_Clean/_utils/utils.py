@@ -8,8 +8,10 @@ from matplotlib import pyplot as plt
 
 # 画功率谱密度图
 def plot_psd(raw, PSD_folder):
-    psd_fig = raw.compute_psd(fmin=0, fmax=50).plot()
-    psd_fig.savefig(os.path.join(PSD_folder, "psd_0-50Hz.jpg"))
+    bands = {'delta': [0.5, 4], 'theta': [4, 8], 'alpha': [8, 13], 'beta': [13, 30], 'gamma': [30, 50]}
+    for band in bands:
+        psd_fig = raw.compute_psd(fmin=bands[band][0], fmax=bands[band][1], show=False).plot()
+        psd_fig.savefig(os.path.join(PSD_folder, "psd_" + bands[band][0] + '-' + bands[band][1] + 'Hz' + ".jpg"))
 
 
 def show_EEG(raw, scaling):
