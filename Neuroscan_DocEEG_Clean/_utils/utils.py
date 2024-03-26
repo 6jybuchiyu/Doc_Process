@@ -8,10 +8,13 @@ from matplotlib import pyplot as plt
 
 # 画功率谱密度图
 def plot_psd(raw, PSD_folder):
+    psd_fig = raw.compute_psd(fmin=0.1, fmax=50).plot()
+    psd_fig.savefig(os.path.join(PSD_folder, "psd_0 - 50Hz.jpg"))
+
+    # 频率分析
     bands = {'delta': [0.5, 4], 'theta': [4, 8], 'alpha': [8, 13], 'beta': [13, 30], 'gamma': [30, 50]}
-    for band in bands:
-        psd_fig = raw.compute_psd(fmin=bands[band][0], fmax=bands[band][1], show=False).plot()
-        psd_fig.savefig(os.path.join(PSD_folder, "psd_" + bands[band][0] + '-' + bands[band][1] + 'Hz' + ".jpg"))
+    topomap_fig = raw.plot_psd_topomap(ch_type='eeg', normalize=True, bands=bands, show=False)
+    topomap_fig.savefig(os.path.join(PSD_folder, "topomap.jpg"))
 
 
 def show_EEG(raw, scaling):
@@ -29,6 +32,11 @@ def get_CNT_path(data_folder):
         origin_data_folder = os.path.join(data_folder, 'raw', subject_folder, 'Acquisition')
         cnt_paths.append(os.path.join(origin_data_folder, 'Acquisition 01_proc_convert.cdt.cnt'))
     return cnt_paths
+
+
+def get_subject_path(subject_name, path):
+    end_index = path.find(subject_name) + len(subject_name)
+    return path[:end_index]
 
 
 def read_data(cnt_path):
@@ -73,7 +81,8 @@ def split_data(raw, subject_name, DataFolder):
     def save_data4pt(cnt_data, DataFolder, name, trial):
         data, _ = cnt_data[:, :]
         tensor_file = torch.Tensor(data)
-        path_save = os.path.join(DataFolder, "EEG", name)
+        # save path
+        path_save = os.path.join(DataFolder, "raw", name, "EEG")
         if not os.path.exists(path_save):
             os.makedirs(path_save)
         save_file = trial + ".pt"
