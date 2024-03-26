@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 
 # 画功率谱密度图
 def plot_psd(raw, PSD_folder):
-    psd_fig = raw.compute_psd(fmin=0.1, fmax=50).plot()
+    psd_fig = raw.compute_psd(fmin=0.1, fmax=50).plot(show=False)
     psd_fig.savefig(os.path.join(PSD_folder, "psd_0 - 50Hz.jpg"))
 
     # 频率分析
@@ -41,7 +41,7 @@ def get_subject_path(subject_name, path):
 
 def read_data(cnt_path):
     raw = mne.io.read_raw_cnt(cnt_path, preload=True)
-    show_EEG(raw, 3e-3)
+    # show_EEG(raw, 3e-3)
     # ['Fp1', 'Fp2', 'F7', 'F3', 'Fz', 'F4', 'F8', 'FT7', 'FC3', 'FCz', 'FC4', 'FT8', 'T3', 'C3', 'Cz', 'C4',
     # 'T4','TP7', 'CP3', 'CPz', 'CP4', 'TP8', 'A1', 'T5', 'P3', 'Pz', 'P4', 'T6', 'A2', 'O1', 'Oz', 'O2']
     # 删除无用通道

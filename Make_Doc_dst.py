@@ -30,7 +30,7 @@ def make_1subject_dst(EEG_folder, ss_dst_folder):
     origin_freq = 1000
     target_freq = 200
     freq_bands = [(1, 4), (4, 8), (8, 14), (14, 30), (30, 47)]
-    trial_files = os.listdir(EEG_folder)
+    trial_files = [file for file in os.listdir(EEG_folder) if file.endswith('.pt')]
     os.makedirs(ss_dst_folder, exist_ok=True)
 
     subject_de = []
